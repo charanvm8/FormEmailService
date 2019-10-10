@@ -23,7 +23,7 @@ public class EmailController {
     Environment env;
 
     @RequestMapping(value = "/sendFormEmail/{toEmail}", method = RequestMethod.POST)
-    public String sendEmail(@ModelAttribute EmailModel emailModel,@PathVariable String toEmail){
+    public void sendEmail(@ModelAttribute EmailModel emailModel,@PathVariable String toEmail){
         final String username = env.getProperty("USER_EMAIL");
         final String password = env.getProperty("USER_PASSWORD");
         Properties prop = new Properties();
@@ -47,17 +47,15 @@ public class EmailController {
                     Message.RecipientType.TO,
                     InternetAddress.parse(toEmail)
             );
-            message.setSubject("Git Website Contact - "+emailModel.getName());
-            message.setText(emailModel.getMessage());
+            message.setSubject("Personal Website Contact - "+emailModel.getName());
+            message.setText("From : "+emailModel.getEmail()+"\nContent : "+emailModel.getMessage());
 
             Transport.send(message);
-
-            System.out.println("Done");
-            return "Email Sent";
+            LOGGER.info("Email Sent");
 
         } catch (MessagingException e) {
             e.printStackTrace();
-            return "Error Sending email";
+            LOGGER.error("Unable to send request");
         }
 
     }
