@@ -3,6 +3,8 @@ package com.email.generic.service.controller;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.validation.constraints.Email;
+
 import com.email.generic.service.model.EmailModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +24,7 @@ public class EmailController {
     @Autowired
     Environment env;
 
+    @CrossOrigin(origins = "https://charanvm8.github.io/")
     @RequestMapping(value = "/sendFormEmail/{toEmail}", method = RequestMethod.POST)
     public void sendEmail(@ModelAttribute EmailModel emailModel,@PathVariable String toEmail){
         final String username = env.getProperty("USER_EMAIL");
@@ -40,7 +43,6 @@ public class EmailController {
                     }
                 });
         try {
-
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(emailModel.getEmail()));
             message.setRecipients(
@@ -49,14 +51,11 @@ public class EmailController {
             );
             message.setSubject("Personal Website Contact - "+emailModel.getName());
             message.setText("From : "+emailModel.getEmail()+"\nContent : "+emailModel.getMessage());
-
             Transport.send(message);
             LOGGER.info("Email Sent");
-
         } catch (MessagingException e) {
             e.printStackTrace();
             LOGGER.error("Unable to send request");
         }
-
     }
 }
