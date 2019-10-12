@@ -24,7 +24,6 @@ public class EmailController {
     @Autowired
     Environment env;
 
-    @CrossOrigin(origins = "https://charanvm8.github.io/")
     @RequestMapping(value = "/sendFormEmail/{toEmail}", method = RequestMethod.POST)
     public void sendEmail(@ModelAttribute EmailModel emailModel,@PathVariable String toEmail){
         final String username = env.getProperty("USER_EMAIL");
